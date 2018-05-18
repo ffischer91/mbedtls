@@ -79,6 +79,8 @@ int main( void )
 #define READ_TIMEOUT_MS 10000   /* 5 seconds */
 #define DEBUG_LEVEL 0
 
+#define SERVER_PORT "4433"
+
 static void my_debug( void *ctx, int level,
                       const char *file, int line,
                       const char *str )
@@ -130,7 +132,7 @@ int main( void )
     /*
      * 1. Load the certificates and private RSA key
      */
-    printf( "\n  . Loading the server cert. and key..." );
+    printf( "\n  1. Loading the server cert. and key..." );
     fflush( stdout );
 
     /*
@@ -167,10 +169,11 @@ int main( void )
     /*
      * 2. Setup the "listening" UDP socket
      */
-    printf( "  . Bind on udp/*/4433 ..." );
+    printf( "  2. Bind on udp/*/ ..." );
+    printf(SERVER_PORT);
     fflush( stdout );
 
-    if( ( ret = mbedtls_net_bind( &listen_fd, NULL, "4433", MBEDTLS_NET_PROTO_UDP ) ) != 0 )
+    if( ( ret = mbedtls_net_bind( &listen_fd, NULL, SERVER_PORT, MBEDTLS_NET_PROTO_UDP ) ) != 0 )
     {
         printf( " failed\n  ! mbedtls_net_bind returned %d\n\n", ret );
         goto exit;
@@ -181,7 +184,7 @@ int main( void )
     /*
      * 3. Seed the RNG
      */
-    printf( "  . Seeding the random number generator..." );
+    printf( "  3. Seeding the random number generator..." );
     fflush( stdout );
 
     if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
@@ -197,7 +200,7 @@ int main( void )
     /*
      * 4. Setup stuff
      */
-    printf( "  . Setting up the DTLS data..." );
+    printf( "  4. Setting up the DTLS data..." );
     fflush( stdout );
 
     if( ( ret = mbedtls_ssl_config_defaults( &conf,
@@ -290,7 +293,7 @@ reset:
     /*
      * 5. Handshake
      */
-    printf( "  . Performing the DTLS handshake..." );
+    printf( "  5. Performing the DTLS handshake..." );
     fflush( stdout );
 
     do ret = mbedtls_ssl_handshake( &ssl );
@@ -314,7 +317,7 @@ reset:
     /*
      * 6. Read the echo Request
      */
-    printf( "  < Read from client:" );
+    printf( "  6. < Read from client:" );
     fflush( stdout );
 
     len = sizeof( buf ) - 1;
@@ -349,7 +352,7 @@ reset:
     /*
      * 7. Write the 200 Response
      */
-    printf( "  > Write to client:" );
+    printf( "  7. > Write to client:" );
     fflush( stdout );
 
     do ret = mbedtls_ssl_write( &ssl, buf, len );
@@ -369,7 +372,7 @@ reset:
      * 8. Done, cleanly close the connection
      */
 close_notify:
-    printf( "  . Closing the connection..." );
+    printf( "  8. Closing the connection..." );
 
     /* No error checking, the connection might be closed already */
     do ret = mbedtls_ssl_close_notify( &ssl );

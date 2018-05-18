@@ -112,7 +112,7 @@ int main( int argc, char *argv[] )
     mbedtls_x509_crt_init( &cacert );
     mbedtls_ctr_drbg_init( &ctr_drbg );
 
-    mbedtls_printf( "\n  . Seeding the random number generator..." );
+    mbedtls_printf( "\n  0. Seeding the random number generator..." );
     fflush( stdout );
 
     mbedtls_entropy_init( &entropy );
@@ -127,9 +127,9 @@ int main( int argc, char *argv[] )
     mbedtls_printf( " ok\n" );
 
     /*
-     * 0. Load certificates
+     * 1. Load certificates
      */
-    mbedtls_printf( "  . Loading the CA root certificate ..." );
+    mbedtls_printf( "  1. Loading the CA root certificate ..." );
     fflush( stdout );
 
     ret = mbedtls_x509_crt_parse( &cacert, (const unsigned char *) mbedtls_test_cas_pem,
@@ -143,9 +143,9 @@ int main( int argc, char *argv[] )
     mbedtls_printf( " ok (%d skipped)\n", ret );
 
     /*
-     * 1. Start the connection
+     * 2. Start the connection
      */
-    mbedtls_printf( "  . Connecting to udp/%s/%s...", SERVER_NAME, SERVER_PORT );
+    mbedtls_printf( "  2. Connecting to udp/%s/%s...", SERVER_NAME, SERVER_PORT );
     fflush( stdout );
 
     if( ( ret = mbedtls_net_connect( &server_fd, SERVER_ADDR,
@@ -158,9 +158,9 @@ int main( int argc, char *argv[] )
     mbedtls_printf( " ok\n" );
 
     /*
-     * 2. Setup stuff
+     * 3. Setup stuff
      */
-    mbedtls_printf( "  . Setting up the DTLS structure..." );
+    mbedtls_printf( "  3. Setting up the DTLS structure..." );
     fflush( stdout );
 
     if( ( ret = mbedtls_ssl_config_defaults( &conf,
@@ -203,7 +203,7 @@ int main( int argc, char *argv[] )
     /*
      * 4. Handshake
      */
-    mbedtls_printf( "  . Performing the DTLS handshake..." );
+    mbedtls_printf( "  4. Performing the DTLS handshake..." );
     fflush( stdout );
 
     do ret = mbedtls_ssl_handshake( &ssl );
@@ -221,7 +221,7 @@ int main( int argc, char *argv[] )
     /*
      * 5. Verify the server certificate
      */
-    mbedtls_printf( "  . Verifying peer X.509 certificate..." );
+    mbedtls_printf( "  5. Verifying peer X.509 certificate..." );
 
     /* In real life, we would have used MBEDTLS_SSL_VERIFY_REQUIRED so that the
      * handshake would not succeed if the peer's cert is bad.  Even if we used
@@ -243,7 +243,7 @@ int main( int argc, char *argv[] )
      * 6. Write the echo request
      */
 send_request:
-    mbedtls_printf( "  > Write to server:" );
+    mbedtls_printf( "  6. > Write to server:" );
     fflush( stdout );
 
     len = sizeof( MESSAGE ) - 1;
@@ -264,7 +264,7 @@ send_request:
     /*
      * 7. Read the echo response
      */
-    mbedtls_printf( "  < Read from server:" );
+    mbedtls_printf( "  7. < Read from server:" );
     fflush( stdout );
 
     len = sizeof( buf ) - 1;
@@ -302,7 +302,7 @@ send_request:
      * 8. Done, cleanly close the connection
      */
 close_notify:
-    mbedtls_printf( "  . Closing the connection..." );
+    mbedtls_printf( "  8. Closing the connection..." );
 
     /* No error checking, the connection might be closed already */
     do ret = mbedtls_ssl_close_notify( &ssl );
