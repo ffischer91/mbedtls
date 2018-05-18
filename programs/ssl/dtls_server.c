@@ -79,7 +79,9 @@ int main( void )
 #define READ_TIMEOUT_MS 10000   /* 5 seconds */
 #define DEBUG_LEVEL 0
 
-#define SERVER_PORT "4433"
+#define SERVER_PORT "50000"
+#define SERVER_ADDR "fe80::cafe:2"      // "127.0.0.1" /* forces IPv4 */
+char* server_addr = "fe80::cafe:2%enx00e04c13590c" ;
 
 static void my_debug( void *ctx, int level,
                       const char *file, int line,
@@ -172,8 +174,8 @@ int main( void )
     printf( "  2. Bind on udp/*/ ..." );
     printf(SERVER_PORT);
     fflush( stdout );
-
-    if( ( ret = mbedtls_net_bind( &listen_fd, NULL, SERVER_PORT, MBEDTLS_NET_PROTO_UDP ) ) != 0 )
+    //server_addr
+    if( ( ret = mbedtls_net_bind( &listen_fd, server_addr , SERVER_PORT, MBEDTLS_NET_PROTO_UDP ) ) != 0 )
     {
         printf( " failed\n  ! mbedtls_net_bind returned %d\n\n", ret );
         goto exit;

@@ -60,10 +60,10 @@ int main( void )
 #include "mbedtls/certs.h"
 #include "mbedtls/timing.h"
 
-#define SERVER_PORT "4433"
+#define SERVER_PORT "50000"
 #define SERVER_NAME "localhost"
-#define SERVER_ADDR "127.0.0.1" /* forces IPv4 */
-#define MESSAGE     "Echo this"
+#define SERVER_ADDR  "fe80::cafe:2%enx00e04c13590c" /* forces IPv4 *///"fe80::cafe:2"//
+#define MESSAGE     "<Echo this MEssage>"
 
 #define READ_TIMEOUT_MS 1000
 #define MAX_RETRY       5
